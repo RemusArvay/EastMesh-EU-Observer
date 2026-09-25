@@ -60,7 +60,7 @@ Log in with the admin password you set above.
 
 ## MeshCore network settings
 
-- Frequency: `869.6179809 MHz`, BW62.5, SF8, CR8 (EU/Romania)
+- Radio preset: EU/UK Narrow — 869.6179809 MHz, BW62.5, SF8, CR8
 - For CoreScope RO credentials contact the administrator at [map.meshcore.com.ro](https://map.meshcore.com.ro)
 
 ## Credits
