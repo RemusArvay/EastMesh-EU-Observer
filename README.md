@@ -32,9 +32,11 @@ Use merged for a clean install on a new board.
 
 After flashing, open the Console tab on https://observer.gessaman.com and run:
 
+```
 set wifi.ssid YourWiFiName
 set wifi.pwd YourWiFiPassword
 password YourAdminPassword
+```
 
 Reset the board after (physical button or disconnect USB).
 
