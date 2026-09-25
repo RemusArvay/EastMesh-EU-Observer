@@ -33,7 +33,7 @@ extern "C" esp_err_t esp_crt_bundle_attach(void* conf);
 #endif
 
 #ifndef CLIENT_VERSION
-  #define CLIENT_VERSION "eastmesh-observer"
+  #define CLIENT_VERSION "eastmesh-eu-observer"
 #endif
 
 #ifndef CLIENT_ENV
@@ -137,6 +137,7 @@ const MQTTUplink::BrokerSpec MQTTUplink::kBrokerSpecs[kBrokerCount] = {
      kLetsmeshEuBit, false, 0},
     {"letsmesh-us", "letsmesh-us", "mqtt-us-v1.letsmesh.net", "wss://mqtt-us-v1.letsmesh.net:443/mqtt",
      kLetsmeshUsBit, false, 0},
+    {"corescope-ro", "CoreScope RO", "mqtt.meshcore.com.ro", nullptr, kCoreScopeRoBit, true, 0},
     {"custom", "custom", nullptr, nullptr, kCustomBit, true, 0},
 };
 
@@ -218,6 +219,9 @@ const char* MQTTUplink::brokerHost(const BrokerState& broker) const {
 }
 
 uint16_t MQTTUplink::brokerPort(const BrokerState& broker) const {
+  if (broker.spec != nullptr && broker.spec->bit == kCoreScopeRoBit) {
+    return 8883;
+  }
   if (broker.spec != nullptr && broker.spec->custom) {
     return _prefs.custom_port != 0 ? _prefs.custom_port : 1883;
   }
@@ -401,7 +405,8 @@ void MQTTUplink::formatTopic(char* dst, size_t dst_size, const char* leaf) const
   if (dst == nullptr || dst_size == 0) {
     return;
   }
-  snprintf(dst, dst_size, "meshcore/%s/%s/%s", _prefs.iata, _device_id, leaf);
+  const char* topic_name = (_node_name != nullptr && _node_name[0] != 0) ? _node_name : _device_id;
+  snprintf(dst, dst_size, "meshcore/%s/%s/%s", _prefs.iata, topic_name, leaf);
 }
 
 bool MQTTUplink::isActive() const {
@@ -983,7 +988,12 @@ void MQTTUplink::ensureBroker(BrokerState& broker, bool allow_new_connect) {
   } else {
     cfg.broker.address.hostname = brokerHost(broker);
     cfg.broker.address.port = brokerPort(broker);
-    cfg.broker.address.transport = MQTT_TRANSPORT_OVER_TCP;
+    cfg.broker.address.transport = (_prefs.custom_port == 8883 || broker.spec->bit == kCoreScopeRoBit) ? MQTT_TRANSPORT_OVER_SSL : MQTT_TRANSPORT_OVER_TCP;
+    if (_prefs.custom_port == 8883 || broker.spec->bit == kCoreScopeRoBit) {
+#if defined(MQTT_USE_CRT_BUNDLE)
+      cfg.broker.verification.crt_bundle_attach = MQTT_CRT_BUNDLE_ATTACH;
+#endif
+    }
   }
   if (broker.spec->custom) {
     cfg.credentials.authentication.password = _prefs.custom_password;
@@ -1018,7 +1028,12 @@ void MQTTUplink::ensureBroker(BrokerState& broker, bool allow_new_connect) {
   } else {
     cfg.host = brokerHost(broker);
     cfg.port = brokerPort(broker);
-    cfg.transport = MQTT_TRANSPORT_OVER_TCP;
+    cfg.transport = (_prefs.custom_port == 8883) ? MQTT_TRANSPORT_OVER_SSL : MQTT_TRANSPORT_OVER_TCP;
+    if (_prefs.custom_port == 8883 || broker.spec->bit == kCoreScopeRoBit) {
+#if defined(MQTT_USE_CRT_BUNDLE)
+      cfg.crt_bundle_attach = MQTT_CRT_BUNDLE_ATTACH;
+#endif
+    }
   }
   cfg.username = broker.username;
   cfg.password = broker.spec->custom ? _prefs.custom_password : broker.token;
@@ -1392,7 +1407,7 @@ bool MQTTUplink::setCustomHost(const char* host) {
   bool saved = savePrefs();
   if (saved && changed) {
     for (BrokerState& broker : _brokers) {
-      if (broker.spec != nullptr && broker.spec->bit == kCustomBit) {
+      if (broker.spec != nullptr && broker.spec->bit == kCustomBit || broker.spec->bit == kCoreScopeRoBit) {
         destroyBroker(broker);
       }
     }
@@ -1414,7 +1429,7 @@ bool MQTTUplink::setCustomPort(const char* port) {
   bool saved = savePrefs();
   if (saved && changed) {
     for (BrokerState& broker : _brokers) {
-      if (broker.spec != nullptr && broker.spec->bit == kCustomBit) {
+      if (broker.spec != nullptr && broker.spec->bit == kCustomBit || broker.spec->bit == kCoreScopeRoBit) {
         destroyBroker(broker);
       }
     }
@@ -1446,7 +1461,7 @@ bool MQTTUplink::setCustomTransport(const char* transport) {
   bool saved = savePrefs();
   if (saved && changed) {
     for (BrokerState& broker : _brokers) {
-      if (broker.spec != nullptr && broker.spec->bit == kCustomBit) {
+      if (broker.spec != nullptr && broker.spec->bit == kCustomBit || broker.spec->bit == kCoreScopeRoBit) {
         destroyBroker(broker);
       }
     }
@@ -1463,7 +1478,7 @@ bool MQTTUplink::setCustomUsername(const char* username) {
   bool saved = savePrefs();
   if (saved) {
     for (BrokerState& broker : _brokers) {
-      if (broker.spec != nullptr && broker.spec->bit == kCustomBit) {
+      if (broker.spec != nullptr && broker.spec->bit == kCustomBit || broker.spec->bit == kCoreScopeRoBit) {
         destroyBroker(broker);
       }
     }
@@ -1479,7 +1494,7 @@ bool MQTTUplink::setCustomPassword(const char* password) {
   bool saved = savePrefs();
   if (saved) {
     for (BrokerState& broker : _brokers) {
-      if (broker.spec != nullptr && broker.spec->bit == kCustomBit) {
+      if (broker.spec != nullptr && broker.spec->bit == kCustomBit || broker.spec->bit == kCoreScopeRoBit) {
         destroyBroker(broker);
       }
     }

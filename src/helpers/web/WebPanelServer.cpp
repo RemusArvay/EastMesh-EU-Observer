@@ -802,8 +802,8 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
                 <button class="savebtn" data-prefix="set path.hash.mode " data-input="pathHashMode">Save</button>
               </div>
             </div>
-            <div class="field-card">
-              <label class="label" for="regionState">Region (Australia)</label>
+            <div class="field-card" style="display:none">
+              <label class="label" for="regionState">Region</label>
               <div class="inline-actions two-actions">
                 <select id="regionState">
                   <option value="">Select state</option>
@@ -902,73 +902,23 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
         <div class="field-card">
           <label class="label" for="mqttIata">MQTT IATA</label>
           <div class="inline-actions">
-            <select id="mqttIata">
-              <optgroup label="Configuration">
-                <option value="UNSET">UNSET - To be configured</option>
-              </optgroup>
-              <optgroup label="ACT">
-                <option value="CBR">CBR - Canberra</option>
-              </optgroup>
-              <optgroup label="New South Wales">
-                <option value="ABX">ABX - Albury</option>
-                <option value="ARM">ARM - Armidale</option>
-                <option value="BHQ">BHQ - Broken Hill</option>
-                <option value="BNK">BNK - Ballina</option>
-                <option value="CFS">CFS - Coffs Harbour</option>
-                <option value="DBO">DBO - Dubbo</option>
-                <option value="GFF">GFF - Griffith</option>
-                <option value="GFN">GFN - Grafton</option>
-                <option value="LDH">LDH - Lord Howe Island</option>
-                <option value="LSY">LSY - Lismore</option>
-                <option value="MIM">MIM - Merimbula</option>
-                <option value="MRZ">MRZ - Moree</option>
-                <option value="MYA">MYA - Moruya</option>
-                <option value="NTL">NTL - Newcastle</option>
-                <option value="OAG">OAG - Orange</option>
-                <option value="PQQ">PQQ - Port Macquarie</option>
-                <option value="SYD">SYD - Sydney</option>
-                <option value="WGA">WGA - Wagga Wagga</option>
-              </optgroup>
-              <optgroup label="Queensland">
-                <option value="ABM">ABM - Bamaga</option>
-                <option value="BNE">BNE - Brisbane</option>
-                <option value="CNS">CNS - Cairns</option>
-                <option value="HTI">HTI - Hamilton Island</option>
-                <option value="HVB">HVB - Hervey Bay</option>
-                <option value="ISA">ISA - Mount Isa</option>
-                <option value="LRE">LRE - Longreach</option>
-                <option value="MCY">MCY - Sunshine Coast</option>
-                <option value="MKY">MKY - Mackay</option>
-                <option value="OOL">OOL - Gold Coast</option>
-                <option value="PPP">PPP - Proserpine</option>
-                <option value="ROK">ROK - Rockhampton</option>
-                <option value="TSV">TSV - Townsville</option>
-                <option value="WEI">WEI - Weipa</option>
-                <option value="WTB">WTB - Toowoomba Wellcamp</option>
-              </optgroup>
-              <optgroup label="South Australia">
-                <option value="ADL">ADL - Adelaide</option>
-                <option value="KGC">KGC - Kingscote</option>
-                <option value="MGB">MGB - Mount Gambier</option>
-                <option value="PLO">PLO - Port Lincoln</option>
-                <option value="WYA">WYA - Whyalla</option>
-              </optgroup>
-              <optgroup label="Tasmania">
-                <option value="BWT">BWT - Burnie</option>
-                <option value="DPO">DPO - Devonport</option>
-                <option value="FLS">FLS - Flinders Island</option>
-                <option value="HBA">HBA - Hobart</option>
-                <option value="KNS">KNS - King Island</option>
-                <option value="LST">LST - Launceston</option>
-              </optgroup>
-              <optgroup label="Victoria">
-                <option value="AVV">AVV - Avalon</option>
-                <option value="GEX">GEX - Geelong West</option>
-                <option value="MEB">MEB - Essendon Fields</option>
-                <option value="MEL">MEL - Melbourne</option>
-                <option value="MQL">MQL - Mildura</option>
-              </optgroup>
-            </select>
+            <select id="mqttIata"><optgroup label="Configuration"><option value="UNSET">UNSET - To be configured</option></optgroup><optgroup label="Romania &amp; Balkans">
+                <option value="AR">AR - Arad, RO</option>
+                <option value="BEG">BEG - Belgrad, RS</option>
+                <option value="BV">BV - Brasov, RO</option>
+                <option value="CS">CS - Caras-Severin / Resita, RO</option>
+                <option value="CV">CV - Covasna, RO</option>
+                <option value="GR">GR - GR, RO</option>
+                <option value="IS">IS - Iasi, RO</option>
+                <option value="MD">MD - Chisinau, MD</option>
+                <option value="OTP">OTP - Bucuresti, RO</option>
+                <option value="PDV">PDV - Plovdiv, BG</option>
+                <option value="PH">PH - PH, RO</option>
+                <option value="RES">RES - Resita / Caras-Severin, RO</option>
+                <option value="SOF">SOF - Sofia, BG</option>
+                <option value="TM">TM - Timis, RO</option>
+                <option value="TSR">TSR - Timisoara / Timis, RO</option>
+              </optgroup></select>
             <button class="iconbtn" data-load-cmd="get mqtt.iata" data-load-input="mqttIata" title="Refresh MQTT IATA">&#8635;</button>
             <button class="savebtn" data-prefix="set mqtt.iata " data-input="mqttIata">Save</button>
           </div>
@@ -1007,7 +957,8 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
 	            <input id="mqttWaev" class="visually-hidden" type="checkbox" tabindex="-1" aria-hidden="true">
 	            <input id="mqttLetsmeshEu" class="visually-hidden" type="checkbox" tabindex="-1" aria-hidden="true">
 	            <input id="mqttLetsmeshUs" class="visually-hidden" type="checkbox" tabindex="-1" aria-hidden="true">
-	            <input id="mqttCustom" class="visually-hidden" type="checkbox" tabindex="-1" aria-hidden="true">
+	            <input id="mqttCoreScopeRo" class="visually-hidden" type="checkbox" tabindex="-1" aria-hidden="true">
+                    <input id="mqttCustom" class="visually-hidden" type="checkbox" tabindex="-1" aria-hidden="true">
 	            <div class="broker-group wide" id="mqttCustomConfig" style="display:none">
 	              <div class="broker-group-title">Custom MQTT settings</div>
 	              <div class="broker-grid single">
@@ -2768,6 +2719,7 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
       { key:"eastmesh-au", input:"mqttEastmeshAu", label:"EastMesh AU", set:"set mqtt.eastmesh-au" },
       { key:"meshmapper", input:"mqttMeshmapper", label:"MeshMapper", set:"set mqtt.meshmapper" },
       { key:"waev", input:"mqttWaev", label:"Waev", set:"set mqtt.waev" },
+      { key:"corescope-ro", input:"mqttCoreScopeRo", label:"CoreScope RO", set:"set mqtt.corescope-ro", custom:true },
       { key:"custom", input:"mqttCustom", label:"Custom", set:"set mqtt.custom", custom:true },
       { key:"letsmesh-eu", input:"mqttLetsmeshEu", label:"LetsMesh EU (retired)", set:"set mqtt.letsmesh-eu" },
       { key:"letsmesh-us", input:"mqttLetsmeshUs", label:"LetsMesh US (retired)", set:"set mqtt.letsmesh-us" }
@@ -2811,9 +2763,17 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
       if (!config) return;
       const customSelected = MQTT_SLOT_IDS.some((id) => {
         const select = document.getElementById(id);
-        return !!(select && select.value === "custom");
+        return !!(select && (select.value === "custom" || select.value === "corescope-ro"));
       });
       config.style.display = customSelected ? "" : "none";
+      const coreScopeRoSelected = MQTT_SLOT_IDS.some((id) => {
+        const select = document.getElementById(id);
+        return !!(select && select.value === "corescope-ro");
+      });
+      const endpointInput = document.getElementById("mqttCustomEndpoint");
+      if (coreScopeRoSelected && endpointInput && endpointInput.value === "") {
+        endpointInput.value = "mqtt.meshcore.com.ro:8883";
+      }
     }
     function refreshBrokerSlotsFromState() {
       const enabled = enabledBrokerKeys();
@@ -3300,6 +3260,7 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
           () => loadBrokerState("get mqtt.waev", "mqttWaev", quiet),
           () => loadBrokerState("get mqtt.letsmesh-eu", "mqttLetsmeshEu", quiet),
           () => loadBrokerState("get mqtt.letsmesh-us", "mqttLetsmeshUs", quiet),
+          () => loadBrokerState("get mqtt.corescope-ro", "mqttCoreScopeRo", quiet),
           () => loadBrokerState("get mqtt.custom", "mqttCustom", quiet),
           () => loadCustomEndpoint(quiet),
           () => loadCustomTransport(quiet),

@@ -2485,6 +2485,8 @@ void MyMesh::handleCommand(uint32_t sender_timestamp, char *command, char *reply
     sprintf(reply, "> %s", mqtt.isEndpointEnabled(0x02) ? "on" : "off");
   } else if (strcmp(command, "get mqtt.letsmesh-us") == 0 || strcmp(command, "get mqtt.letsmesh.us") == 0) {
     sprintf(reply, "> %s", mqtt.isEndpointEnabled(0x04) ? "on" : "off");
+  } else if (strcmp(command, "get mqtt.corescope-ro") == 0) {
+    sprintf(reply, "> %s", mqtt.isEndpointEnabled(0x40) ? "on" : "off");
   } else if (strcmp(command, "get mqtt.custom") == 0) {
     sprintf(reply, "> %s", mqtt.isEndpointEnabled(0x08) ? "on" : "off");
   } else if (strcmp(command, "get mqtt.custom.host") == 0) {
@@ -2553,6 +2555,12 @@ void MyMesh::handleCommand(uint32_t sender_timestamp, char *command, char *reply
     }
   } else if (memcmp(command, "set mqtt.letsmesh-us ", 21) == 0 || memcmp(command, "set mqtt.letsmesh.us ", 21) == 0) {
     if (mqtt.setEndpointEnabled(0x04, memcmp(&command[21], "on", 2) == 0)) {
+      strcpy(reply, "OK");
+    } else {
+      strcpy(reply, "Err - max 2 mqtt brokers");
+    }
+  } else if (memcmp(command, "set mqtt.corescope-ro ", 22) == 0) {
+    if (mqtt.setEndpointEnabled(0x40, memcmp(&command[22], "on", 2) == 0)) {
       strcpy(reply, "OK");
     } else {
       strcpy(reply, "Err - max 2 mqtt brokers");
